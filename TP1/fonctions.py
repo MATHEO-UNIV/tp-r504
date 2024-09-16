@@ -19,3 +19,4 @@ def puissance(a, b):
     else:
         return result
 
+
