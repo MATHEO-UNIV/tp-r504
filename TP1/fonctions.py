@@ -3,4 +3,3 @@ def puissance(a, b):
         raise TypeError("Only integers are allowed")
 
     return a ** b
-
