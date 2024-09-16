@@ -1,7 +1,9 @@
-print ( " Hello , World ! " )
-while True:
-	nombre = float(input("Veuillez entrer un nombre : "))
-	carre = nombre ** 2
-	print(f"Le carré de {nombre} est {carre}.")
+import fonctions as f
 
+a = int(input("Veuillez entrer le premier nombre (entier) : "))
+b = int(input("Veuillez entrer le second nombre (entier) : "))
+
+res = f.puissance(a, b)
+
+print(f"{a} élevé à la puissance {b} est {res}.")
 
