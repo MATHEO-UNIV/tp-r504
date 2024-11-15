@@ -9,8 +9,9 @@ public class ClientUDP
 		{
 			InetAddress addr = InetAddress.getLocalHost();
 			System.out.println("adresse=" +addr.getHostName());
+			String s = "Grllll Pahhh";
 			byte[] data = s.getBytes();
-			DatagramPacket packet = new DatagramPacket (data, data.lenght, addr, 1234);
+			DatagramPacket packet = new DatagramPacket (data, data.length, addr, 1234);
 			DatagramSocket sock = new DatagramSocket();
 			sock.send(packet);
 			sock.close();
