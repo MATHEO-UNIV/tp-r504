@@ -5,10 +5,11 @@ app = Flask(__name__)
  
 # MySQL configuration
 db_config = {
-    'host': 'NOM-HOTE-SERVEUR',
+    'host': 'tp4-sql',
     'user': 'root',
     'password': 'foo',
-    'database': 'NOM-DE-LA-BDD'
+    'database': 'demosql',
+	'port': '3306'
 }
 
 # Initialize MySQL connection
@@ -32,4 +33,3 @@ def index():
 if __name__ == '__main__':
     app.run(debug=True)
     
-

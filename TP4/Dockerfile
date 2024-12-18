@@ -7,7 +7,8 @@ RUN apt-get update && \
 		default-libmysqlclient-dev && \
 	apt-get clean
 RUN pip install --upgrade pip
-RUN pip install flask-mysqldb mysql-connector-python
+RUN pip install flask-mysqldb 
+RUN pip install mysql-connector-python
 RUN mkdir -p /srv/templates
 COPY index.html /srv/templates/
 COPY app_1.py /srv/
