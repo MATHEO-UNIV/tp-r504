@@ -25,8 +25,8 @@ def index():
     data = cursor.fetchall()
     
     # Close the cursor and connection
-    cursor.close()
-    conn.close()
+    #cursor.close()
+    #conn.close()
     
     return render_template('index.html', data=data)
 
