@@ -42,25 +42,21 @@ echo "# - IP - TCP ports" > $OUTPUT_FILE
 
 # Étape 1 : Scanner le réseau pour détecter les IPs avec des ports ouverts (ports principaux)
 # Limiter à une petite gamme de ports (par exemple, 22, 80, 443, 8080)
-nmap -p 22,80,443,8080 --open -sT $NETWORK -oG - | grep "open" | awk '{print $2}' > temp_ips.txt
+IP_ADDRESSES=$(nmap -p 22,80,443,8080 --open -sT $NETWORK -oG - | grep "open" | awk '{print $2}')
 
 # Vérifier s'il y a des IPs détectées
-if [ ! -s temp_ips.txt ]; then
+if [ -z "$IP_ADDRESSES" ]; then
     echo "Aucune IP avec des ports ouverts n'a été trouvée."
-    rm temp_ips.txt
     exit 1
 fi
 
 # Étape 2 : Pour chaque IP détectée, compter les ports ouverts parmi les ports spécifiés
-while read IP; do
+for IP in $IP_ADDRESSES; do
     # Compter le nombre de ports ouverts pour cette IP
     OPEN_PORTS=$(nmap -p 22,80,443,8080 --open -sT $IP | grep -c "open")
     
     # Ajouter l'IP et le nombre de ports ouverts dans le fichier CSV
     echo "$IP;$OPEN_PORTS" >> $OUTPUT_FILE
-done < temp_ips.txt
-
-# Supprimer le fichier temporaire des IPs
-rm temp_ips.txt
+done
 
 echo "Scan terminé. Les résultats sont enregistrés dans $OUTPUT_FILE"
