@@ -26,7 +26,7 @@ if [ -z "$LOCAL_IP" ]; then
     exit 1
 fi
 
-# Calculer le réseau à partir de l'IP locale, forcer le masque de sous-réseau en /24
+# Forcer le masque de sous-réseau à /24
 NETWORK=$(echo "$LOCAL_IP" | cut -d. -f1-3).0/24
 
 # Afficher l'adresse IP et le réseau détecté
@@ -42,9 +42,9 @@ echo "# - IP - TCP ports" > $OUTPUT_FILE
 
 # Étape 1 : Scanner le réseau pour détecter les IPs avec des ports ouverts (ports principaux)
 # Limiter à une petite gamme de ports (par exemple, 22, 80, 443, 8080)
-IP_ADDRESSES=$(nmap -p 22,80,443,8080 --open -sT $NETWORK -oG - | grep "open" | awk '{print $2}')
+IP_ADDRESSES=$(nmap -p 22,80,443,8080 --open -sT "$NETWORK" -oG - | grep "open" | awk '{print $2}')
 
-# Vérifier s'il y a des IPs détectées
+# Vérifier si des IPs ont été détectées
 if [ -z "$IP_ADDRESSES" ]; then
     echo "Aucune IP avec des ports ouverts n'a été trouvée."
     exit 1
@@ -52,8 +52,14 @@ fi
 
 # Étape 2 : Pour chaque IP détectée, compter les ports ouverts parmi les ports spécifiés
 for IP in $IP_ADDRESSES; do
+    # Vérifier si l'IP est valide avant de lancer le scan
+    if [[ ! "$IP" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo "L'adresse IP $IP n'est pas valide, elle sera ignorée."
+        continue
+    fi
+    
     # Compter le nombre de ports ouverts pour cette IP
-    OPEN_PORTS=$(nmap -p 22,80,443,8080 --open -sT $IP | grep -c "open")
+    OPEN_PORTS=$(nmap -p 22,80,443,8080 --open -sT "$IP" | grep -c "open")
     
     # Ajouter l'IP et le nombre de ports ouverts dans le fichier CSV
     echo "$IP;$OPEN_PORTS" >> $OUTPUT_FILE
