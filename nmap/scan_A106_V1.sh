@@ -8,6 +8,8 @@ then
 fi
 
 # Identifier l'interface réseau active
+# l'option -F de awk sert à spécifier le séparateur de champs. Dans cet exemple, ': ' est utilisé pour séparer le champ au niveau de l'interface réseau.
+# l'option -v de grep sert à inverser la correspondance. Dans cet exemple, elle permet de filtrer (exclure) la ligne contenant "lo" (l'interface de loopback).
 INTERFACE=$(ip -o link show | awk -F': ' '{print $2}' | grep -v "lo" | head -n 1)
 
 # Vérifier si l'interface a été détectée
@@ -17,6 +19,7 @@ if [ -z "$INTERFACE" ]; then
 fi
 
 # Détecter l'IP locale et le masque de sous-réseau de l'interface active
+
 LOCAL_IP=$(ip -o -4 addr show dev $INTERFACE | awk '{print $4}' | cut -d/ -f1)
 NETMASK=$(ip -o -4 addr show dev $INTERFACE | awk '{print $4}' | cut -d/ -f2)
 
